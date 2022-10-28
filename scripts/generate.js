@@ -8,10 +8,10 @@ const MULTIPLES = [1, 2, 4, 6, 8, 10];
 const SIZES = MULTIPLES.map(m => HEIGHT * m);
 
 async function main() {
-    const queue = prepareDirectories();
-    await generatePngs(queue);
-    await generateWebps(queue);
-    console.info(`🎉 Generated PNGs and WEBPs for ${queue.length * 2} flags!`);
+    const flags = prepareDirectories();
+    await generatePngs(flags);
+    await generateWebps(flags);
+    console.info(`🎉 Generated PNGs and WEBPs for ${flags.length} flags!`);
 }
 
 function prepareDirectories() {
@@ -29,7 +29,7 @@ function prepareDirectories() {
         () => progress.tick()
     );
 
-    const queue = readdirSync('svg')
+    const flags = readdirSync('svg')
         .filter(f => f.endsWith('.svg'))
         .map(f => {
             const name = f.substring(f, f.length - 4);
@@ -40,14 +40,14 @@ function prepareDirectories() {
 
     const time = ((new Date() - progress.start) / 1000).toFixed(1);
     console.info(`📦 Completed preparation in ${time}s!`);
-    return queue;
+    return flags;
 }
 
-async function generatePngs(queue) {
-    console.info(`📷 Generating PNG files for ${queue.length} SVGs...`);
-    const progress = makeProgressBar(queue.length * SIZES.length);
+async function generatePngs(flags) {
+    console.info(`📷 Generating PNG files for ${flags.length} SVGs...`);
+    const progress = makeProgressBar(flags.length * SIZES.length);
 
-    for (const { name, svg } of queue) {
+    for (const { name, svg } of flags) {
         await Promise.all(
             SIZES.map(async s => {
                 const png = await svg2png(svg, { height: s });
@@ -61,11 +61,11 @@ async function generatePngs(queue) {
     console.info(`📷 Completed PNG generation in ${time}s!`);
 }
 
-async function generateWebps(queue) {
-    console.info(`🌐 Generating WEBP files for ${queue.length} SVGs...`);
-    const progress = makeProgressBar(queue.length * SIZES.length);
+async function generateWebps(flags) {
+    console.info(`🌐 Generating WEBP files for ${flags.length} SVGs...`);
+    const progress = makeProgressBar(flags.length * SIZES.length);
 
-    for (const { name } of queue) {
+    for (const { name } of flags) {
         await Promise.all(
             SIZES.map(async s => {
                 const png = readFileSync(`png/${s}/${name}.png`);
