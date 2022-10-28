@@ -1,0 +1,43 @@
+name: Test Flags
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org/
+          cache: 'yarn'
+          cache-dependency-path: yarn.lock
+
+      - name: Install dependencies
+        run: yarn --immutable
+      
+      - name: Generate PNGs and WEBPs
+        run: yarn generate
+      
+      - name: Check for changes
+        shell: pwsh
+        id: check_for_changes
+        run: |
+          $GitStatus = git status
+          $StatusDiff = $GitStatus | Where-Object { $_ -match 'nothing to commit' }
+          $HasChanges = $StatusDiff.Length -eq 0
+          Write-Host "::set-output name=has_changes::$HasChanges"
+
+      - name:
+        if: steps.check_for_changes.outputs.has_changes == 'True'
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.commit
+          git add *.png *.webp
+          git commit -m "[auto commit] Generate PNGs and WEBPs"
+          git push

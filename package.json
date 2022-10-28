@@ -1,0 +1,65 @@
+{
+    "name": "flags",
+    "version": "1.0.0",
+    "private": true,
+    "license": "MIT",
+    "description": "Simple flag icons",
+    "homepage": "https://flags.apteryx.xyz/",
+    "author": {
+        "name": "ApteryxXYZ",
+        "url": "https://apteryx.xyz"
+    },
+    "main": "generate.js",
+    "scripts": {
+        "lint": "eslint **/*.js --fix",
+        "format": "prettier **/*.js *.md *.json --write",
+        "clean": "rimraf png webp",
+        "generate": "node scripts/generate.js",
+        "postinstall": "husky install"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/apteryxxyz/enhanced-ms"
+    },
+    "bugs": {
+        "url": "https://github.com/apteryxxyz/enhanced-ms/issues"
+    },
+    "dependencies": {
+        "progress": "^2.0.3",
+        "sharp": "^0.31.1",
+        "svg2png": "^4.1.1"
+    },
+    "devDependencies": {
+        "eslint": "^8.26.0",
+        "eslint-config-apteryx": "^1.0.6",
+        "eslint-config-prettier": "^8.5.0",
+        "eslint-plugin-prettier": "^4.2.1",
+        "husky": "^8.0.1",
+        "lint-staged": "^13.0.3",
+        "prettier": "^2.7.1",
+        "prettier-config-apteryx": "^1.0.0",
+        "pretty-quick": "^3.1.3",
+        "rimraf": "^3.0.2"
+    },
+    "prettier": "prettier-config-apteryx",
+    "eslintConfig": {
+        "plugins": [
+            "prettier"
+        ],
+        "extends": [
+            "plugin:prettier/recommended",
+            "apteryx"
+        ],
+        "parserOptions": {
+            "ecmaVersion": 2021
+        },
+        "env": {
+            "es2021": true,
+            "node": true,
+            "browser": true
+        }
+    },
+    "lint-staged": {
+        "**/*.js": "eslint src --fix"
+    }
+}
