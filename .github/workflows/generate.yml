@@ -1,4 +1,4 @@
-name: Test Flags
+name: Generate Flags
 
 on:
   push:
